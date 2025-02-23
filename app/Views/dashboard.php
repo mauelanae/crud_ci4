@@ -5,9 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRUD Pasien - CodeIgniter 4 & jQuery</title>
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -115,7 +113,7 @@
           <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Edit Pasien</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <form id="editFormPasien">
+        <form id="editFormPasien" action="/update" method="POST" data-id="">
           <div class="modal-body">
             <input type="hidden" name="id" id="edit_id">
             <div class="row g-3">
@@ -149,7 +147,7 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label"><i class="bi bi-person-lines-fill"></i> Tipe Pasien</label>
-                <select name="tipe_pesien" id="edit_tipe_pesien" class="form-select" required>
+                <select name="tipe_pasien" id="edit_tipe_pasien" class="form-select" required>
                   <option value="">Pilih...</option>
                   <option value="Rawat Jalan">Rawat Jalan</option>
                   <option value="Rawat Inap">Rawat Inap</option>
@@ -165,15 +163,10 @@
     </div>
   </div>
 
-
-  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
   <script>
     $(document).ready(function() {
       loadTable();
@@ -181,75 +174,130 @@
 
     function loadTable() {
       $.get("/all", function(data) {
-        let rows = "";
-        data.forEach((item, index) => {
-          rows += `<tr>
-        <td>${item.id}</td>
-        <td>${item.no_rm}</td>
-        <td>${item.tanggal_kunjung}</td>
-        <td>${item.keluhan}</td>
-        <td>${item.diagnosa}</td>
-        <td>${item.riwayat_penyakit}</td>
-        <td>${item.dokter_pasien}</td>
-        <td>${item.poli}</td>
-        <td>${item.tipe_pesien}</td>
-        <td>${item.tanggal_masuk ?? '-'}</td>
-        <td>${item.tanggal_keluar ?? '-'}</td>
-        <td>
-          <button class="btn btn-warning btn-sm editBtn" data-id="${item.id}">Edit</button>
-          <button class="btn btn-danger btn-sm deleteBtn" data-id="${item.id}">Hapus</button>
-        </td>
-      </tr>`;
-        });
-
-        // Hapus DataTables sebelum inisialisasi ulang
         if ($.fn.DataTable.isDataTable("#example")) {
-          $("#example").DataTable().destroy();
+          $("#example").DataTable().clear().destroy();
         }
+        $("#example tbody").empty();
 
-        $("#example tbody").html(rows);
-
-        // Inisialisasi ulang DataTables setelah data dimuat
         $("#example").DataTable({
-          "paging": true,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "lengthMenu": [5, 10, 25, 50],
-          "language": {
-            "search": "Cari:",
-            "lengthMenu": "Tampilkan _MENU_ data per halaman",
-            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-            "infoEmpty": "Tidak ada data yang tersedia",
-            "infoFiltered": "(disaring dari _MAX_ total data)",
-            "paginate": {
-              "first": "Pertama",
-              "last": "Terakhir",
-              "next": "Selanjutnya",
-              "previous": "Sebelumnya"
+          data: data,
+          columns: [{
+              data: "id",
+              defaultContent: "-"
+            },
+            {
+              data: "no_rm",
+              defaultContent: "-"
+            },
+            {
+              data: "tanggal_kunjung",
+              defaultContent: "-"
+            },
+            {
+              data: "keluhan",
+              defaultContent: "-"
+            },
+            {
+              data: "diagnosa",
+              defaultContent: "-"
+            },
+            {
+              data: "riwayat_penyakit",
+              defaultContent: "-"
+            },
+            {
+              data: "dokter_pasien",
+              defaultContent: "-"
+            },
+            {
+              data: "poli",
+              defaultContent: "-"
+            },
+            {
+              data: "tipe_pasien",
+              defaultContent: "-"
+            },
+            {
+              data: "tanggal_masuk",
+              defaultContent: "-"
+            },
+            {
+              data: "tanggal_keluar",
+              defaultContent: "-"
+            },
+            {
+              data: null,
+              render: function(data, type, row) {
+                return `
+              <button class="btn btn-warning btn-sm editBtn" data-id="${row.id}">Edit</button>
+              <button class="btn btn-danger btn-sm deleteBtn" data-id="${row.id}">Hapus</button>
+            `;
+              }
+            }
+          ],
+          paging: true,
+          searching: true,
+          ordering: true,
+          info: true,
+          lengthMenu: [5, 10, 25, 50],
+          language: {
+            search: "Cari:",
+            lengthMenu: "Tampilkan _MENU_ data per halaman",
+            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+            infoEmpty: "Tidak ada data yang tersedia",
+            infoFiltered: "(disaring dari _MAX_ total data)",
+            paginate: {
+              first: "Pertama",
+              last: "Terakhir",
+              next: "Selanjutnya",
+              previous: "Sebelumnya"
             }
           }
         });
+      }).fail(function() {
+        alert("Gagal memuat data.");
       });
     }
 
-    // Menambahkan pasien baru
+    // Tambah Data Pasien
     $("#formPasien").submit(function(e) {
       e.preventDefault();
       $.post("/store", $(this).serialize(), function(response) {
+        console.log(response); // Debugging: Cek response dari server
+
         alert("Data berhasil ditambahkan!");
         $("#pasienModal").modal("hide");
-        $("#formPasien")[0].reset(); // Reset form setelah submit
-        loadTable();
+        $("#formPasien")[0].reset();
+
+        if (response && response.id) {
+          let table = $("#example").DataTable();
+          table.row.add({
+            "id": response.id || "-",
+            "no_rm": response.no_rm || "-",
+            "tanggal_kunjung": response.tanggal_kunjung || "-",
+            "keluhan": response.keluhan || "-",
+            "diagnosa": response.diagnosa || "-",
+            "riwayat_penyakit": response.riwayat_penyakit || "-",
+            "dokter_pasien": response.dokter_pasien || "-",
+            "poli": response.poli || "-",
+            "tipe_pasien": response.tipe_pasien || "-",
+            "tanggal_masuk": response.tanggal_masuk || "-",
+            "tanggal_keluar": response.tanggal_keluar || "-",
+            "action": `
+                  <button class="btn btn-warning btn-sm editBtn" data-id="${response.id}">Edit</button>
+                  <button class="btn btn-danger btn-sm deleteBtn" data-id="${response.id}">Hapus</button>
+                `
+          }).draw(false);
+          loadTable();
+        }
       }).fail(function() {
         alert("Gagal menambahkan data.");
       });
     });
 
-    // Event delegation untuk tombol Edit
     $(document).on("click", ".editBtn", function() {
       let id = $(this).data("id");
-      $.get("/edit/" + id, function(data) {
+      $.get(`/edit/${id}`, function(data) {
         $("#edit_id").val(data.id);
         $("#edit_no_rm").val(data.no_rm);
         $("#edit_tanggal_kunjung").val(data.tanggal_kunjung);
@@ -258,39 +306,71 @@
         $("#edit_riwayat_penyakit").val(data.riwayat_penyakit);
         $("#edit_dokter_pasien").val(data.dokter_pasien);
         $("#edit_poli").val(data.poli);
-        $("#edit_tipe_pesien").val(data.tipe_pesien);
+        $("#edit_tipe_pasien").val(data.tipe_pasien);
         $("#edit_tanggal_masuk").val(data.tanggal_masuk);
         $("#edit_tanggal_keluar").val(data.tanggal_keluar);
+        $("#editFormPasien").attr("data-id", data.id);
         $("#editPasienModal").modal("show");
       }).fail(function() {
         alert("Gagal mengambil data.");
       });
     });
 
-    // Update pasien
     $("#editFormPasien").submit(function(e) {
       e.preventDefault();
-      $.post("/update", $(this).serialize(), function(response) {
-        alert("Data berhasil diperbarui!");
-        $("#editPasienModal").modal("hide");
-        loadTable();
-      }).fail(function() {
-        alert("Gagal memperbarui data.");
+
+      let formData = $(this).serialize();
+      let id = $("#edit_id").val();
+
+      $.ajax({
+        url: "/update",
+        type: "POST",
+        data: formData,
+        success: function(response) {
+          alert("Data berhasil diperbarui!");
+          $("#editPasienModal").modal("hide");
+
+          let table = $("#example").DataTable();
+
+          // Temukan baris berdasarkan ID pasien yang diedit
+          let row = table.row(`[data-id="${id}"]`);
+
+          if (row.length) {
+            row.data([
+              response.id,
+              response.no_rm,
+              response.tanggal_kunjung,
+              response.keluhan,
+              response.diagnosa,
+              response.riwayat_penyakit,
+              response.dokter_pasien,
+              response.poli,
+              response.tipe_pasien,
+              response.tanggal_masuk,
+              response.tanggal_keluar,
+              `<button class="btn btn-primary editBtn" data-id="${response.id}">Edit</button>`
+            ]).draw(false);
+          }
+          loadTable();
+        },
+        error: function() {
+          alert("Gagal memperbarui data.");
+        },
       });
     });
 
-    // Event delegation untuk tombol Hapus
+    // Hapus Data Pasien
     $(document).on("click", ".deleteBtn", function() {
       let id = $(this).data("id");
-
       if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
         $.ajax({
-          url: "/delete/" + id, // Kirim ID dalam URL
-          type: "DELETE", // Gunakan metode DELETE sesuai dengan RESTful API
+          url: `/delete/${id}`,
+          type: "DELETE",
           success: function(response) {
             if (response.status === "deleted") {
               alert("Data berhasil dihapus!");
-              loadTable(); // Refresh tabel setelah penghapusan berhasil
+              let table = $("#example").DataTable();
+              table.row($(`button[data-id='${id}']`).parents("tr")).remove().draw(false);
             } else {
               alert("Gagal menghapus data: " + response.message);
             }

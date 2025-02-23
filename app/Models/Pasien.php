@@ -12,7 +12,7 @@ class Pasien extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['no_rm', 'tanggal_kunjung', 'keluhan', 'diagnosa', 'riwayat_penyakit', 'dokter_pasien', 'poli', 'tipe_pesien', 'tanggal_masuk', 'tanggal_keluar', 'created_at', 'updated_at'];
+    protected $allowedFields    = ['no_rm', 'tanggal_kunjung', 'keluhan', 'diagnosa', 'riwayat_penyakit', 'dokter_pasien', 'poli', 'tipe_pasien', 'tanggal_masuk', 'tanggal_keluar', 'created_at', 'updated_at'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
