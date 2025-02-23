@@ -3,66 +3,56 @@
 namespace App\Controllers;
 
 use App\Models\Pasien;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Home extends BaseController
 {
-    public function index(): string
+    protected $pasienModel;
+
+    public function __construct()
     {
-
-        $pasien = new Pasien();
-        $data = $pasien->findAll();
-
-        return view('dashboard', ['pasien' => $data]);
-    }
-    public function create()
-    {
-        $pasien = new Pasien();
-        $pasien->insert([
-            'no_rm'             => $this->request->getPost('no_rm'),
-            'tanggal_kunjung'   => $this->request->getPost('tanggal_kunjung'),
-            'keluhan'           => $this->request->getPost('keluhan'),
-            'diagnosa'          => $this->request->getPost('diagnosa'),
-            'riwayat_penyakit'  => $this->request->getPost('riwayat_penyakit'),
-            'dokter_pasien'     => $this->request->getPost('dokter_pasien'),
-            'poli'              => $this->request->getPost('poli'),
-            'tipe_pesien'       => $this->request->getPost('tipe_pesien'),
-            'tanggal_masuk'     => $this->request->getPost('tanggal_masuk'),
-            'tanggal_keluar'    => $this->request->getPost('tanggal_keluar'),
-            'created_at'        => date('Y-m-d H:i:s'),
-        ]);
-
-        return $this->response->setJSON(['status' => 'Pasien Created']);
+        $this->pasienModel = new Pasien();
     }
 
-    public function update($id)
+    public function index()
     {
-        $pasien = new Pasien();
-        $pasien->update($id, [
-            'no_rm'             => $this->request->getPost('no_rm'),
-            'tanggal_kunjung'   => $this->request->getPost('tanggal_kunjung'),
-            'keluhan'           => $this->request->getPost('keluhan'),
-            'diagnosa'          => $this->request->getPost('diagnosa'),
-            'riwayat_penyakit'  => $this->request->getPost('riwayat_penyakit'),
-            'dokter_pasien'     => $this->request->getPost('dokter_pasien'),
-            'poli'              => $this->request->getPost('poli'),
-            'tipe_pesien'       => $this->request->getPost('tipe_pesien'),
-            'tanggal_masuk'     => $this->request->getPost('tanggal_masuk'),
-            'tanggal_keluar'    => $this->request->getPost('tanggal_keluar'),
-            'updated_at'        => date('Y-m-d H:i:s'),
-        ]);
+        return view('dashboard');
+    }
 
-        return $this->response->setJSON(['status' => 'Pasien Updated']);
+    public function getAll()
+    {
+        $data = $this->pasienModel->findAll();
+        return $this->response->setJSON($data);
+    }
+
+    public function store()
+    {
+        $this->pasienModel->save($this->request->getPost());
+        return $this->response->setJSON(['status' => 'success']);
+    }
+
+    public function edit($id)
+    {
+        $data = $this->pasienModel->find($id);
+        return $this->response->setJSON($data);
+    }
+
+    public function update()
+    {
+        $id = $this->request->getPost('id');
+        $this->pasienModel->update($id, $this->request->getPost());
+        return $this->response->setJSON(['status' => 'updated']);
     }
 
     public function delete($id)
     {
-        $model = new Pasien();
+        $pasien = $this->pasienModel->find($id);
 
-        if ($model->find($id)) {
-            $model->delete($id);
-            return $this->response->setJSON(['status' => 'Data berhasil dihapus']);
-        } else {
-            return $this->response->setStatusCode(404)->setJSON(['error' => 'Data tidak ditemukan']);
+        if (!$pasien) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Data tidak ditemukan']);
         }
+
+        $this->pasienModel->delete($id);
+        return $this->response->setJSON(['status' => 'deleted', 'message' => 'Data berhasil dihapus']);
     }
 }

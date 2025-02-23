@@ -6,9 +6,9 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->post('/create', 'Home::create');
-$routes->post('/update/(:num)', 'Home::update/$1');
+$routes->get('/all', 'Home::getAll');
+$routes->post('/store', 'Home::store');
+$routes->get('/edit/(:num)', 'Home::edit/$1');
+$routes->post('/update', 'Home::update');
 $routes->delete('/delete/(:num)', 'Home::delete/$1');
-$routes->setDefaultController('Home');
-$routes->setDefaultMethod('index');
 

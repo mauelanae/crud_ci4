@@ -80,7 +80,7 @@ class DataSeeder extends Seeder
         'updated_at'       => date('Y-m-d H:i:s'),
       ],
       [
-        'no_rm'            => 'RM005',
+        'no_rm'            => 'RM006',
         'tanggal_kunjung'  => '2025-01-16',
         'keluhan'          => 'Pusing dan lemas',
         'diagnosa'         => 'Hipotensi',
@@ -94,7 +94,7 @@ class DataSeeder extends Seeder
         'updated_at'       => date('Y-m-d H:i:s'),
       ],
       [
-        'no_rm'            => 'RM006',
+        'no_rm'            => 'RM007',
         'tanggal_kunjung'  => '2025-01-16',
         'keluhan'          => 'Mual',
         'diagnosa'         => 'Gerd',
@@ -108,7 +108,7 @@ class DataSeeder extends Seeder
         'updated_at'       => date('Y-m-d H:i:s'),
       ],
       [
-        'no_rm'            => 'RM007',
+        'no_rm'            => 'RM008',
         'tanggal_kunjung'  => '2025-01-19',
         'keluhan'          => 'Mual dan Pusing',
         'diagnosa'         => 'Magh',
