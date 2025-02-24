@@ -42,7 +42,7 @@ class PasienTable extends Migration
                 'type'       => 'TEXT',
                 'constraint' => '100',
             ],
-            'tipe_pesien' => [
+            'tipe_pasien' => [
                 'type'       => 'ENUM("Rawat Jalan", "Rawat Inap")',
             ],
             'tanggal_masuk' => [
