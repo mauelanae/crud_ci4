@@ -350,8 +350,8 @@
               response.tanggal_keluar,
               `<button class="btn btn-primary editBtn" data-id="${response.id}">Edit</button>`
             ]).draw(false);
+            loadTable();
           }
-          loadTable();
         },
         error: function() {
           alert("Gagal memperbarui data.");
